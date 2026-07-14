@@ -32,8 +32,7 @@ jobs:
               <uses-permission android:name="android.permission.INTERNET"/>
               <application
                   android:allowBackup="true"
-                  android:label="Patcher App"
-                  android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+                  android:label="Patcher App">
                   <activity
                       android:name="com.asaad.patcher.MainActivity"
                       android:exported="true">
@@ -98,10 +97,8 @@ jobs:
                   jvmTarget = '17'
               }
               dependencies {
-                  implementation 'androidx.core:core-ktx:1.12.0'
+                  implementation 'androidx.core:core-ktx:1.10.1'
                   implementation 'androidx.appcompat:appcompat:1.6.1'
-                  implementation 'com.google.android.material:material:1.11.0'
-                  implementation 'androidx.webkit:webkit:1.9.0'
               }
           }
           EOF
