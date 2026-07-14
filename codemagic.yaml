@@ -1,0 +1,116 @@
+workflows:
+  android-native-workflow:
+    name: Android Native APK Build
+    max_build_duration: 60
+    instance_type: mac_mini_m1
+    environment:
+      groups:
+        - android-signing
+      vars:
+        PACKAGE_NAME: "com.asaad.patcher"
+      node: latest
+      java: 17
+    scripts:
+      - name: Set up Android project structure
+        script: |
+          echo "Setting up workspace..."
+          mkdir -p app/src/main/assets
+          mkdir -p app/src/main/java/com/asaad/patcher
+          mkdir -p gradle/wrapper
+          
+          # Move files to proper Android structure
+          [ -f index.html ] && mv index.html app/src/main/assets/
+          [ -f MainActivity.kt ] && mv MainActivity.kt app/src/main/java/com/asaad/patcher/
+          
+          # Create AndroidManifest.xml
+          cat <<EOF > app/src/main/AndroidManifest.xml
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+              package="com.asaad.patcher">
+              <application
+                  android:allowBackup="true"
+                  android:label="Patcher App"
+                  android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+                  <activity
+                      android:name="com.asaad.patcher.MainActivity"
+                      android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          EOF
+          
+          # Create baseline settings.gradle
+          cat <<EOF > settings.gradle
+          rootProject.name = "PatcherApp"
+          include ':app'
+          EOF
+          
+          # Create build.gradle with compatible versions
+          cat <<EOF > build.gradle
+          buildscript {
+              repositories { 
+                  google()
+                  mavenCentral() 
+              }
+              dependencies { 
+                  classpath 'com.android.tools.build:gradle:8.2.2'
+                  classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22" 
+              }
+          }
+          allprojects { 
+              repositories { 
+                  google()
+                  mavenCentral() 
+              } 
+          }
+          EOF
+          
+          # Create app/build.gradle with Java 17 and Kotlin compatibility
+          cat <<EOF > app/build.gradle
+          plugins {
+              id 'com.android.application'
+              id 'org.jetbrains.kotlin.android'
+          }
+          android {
+              namespace 'com.asaad.patcher'
+              compileSdk 34
+              defaultConfig {
+                  applicationId 'com.asaad.patcher'
+                  minSdk 24
+                  targetSdk 34
+                  versionCode 1
+                  versionName '1.0'
+              }
+              buildTypes {
+                  release {
+                      minifyEnabled false
+                  }
+              }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
+              }
+              kotlinOptions {
+                  jvmTarget = '17'
+              }
+          }
+          EOF
+
+          # Manually download and setup Gradle Wrapper (v8.2 to match AGP 8.2.2 requirement)
+          echo "Downloading Gradle Wrapper..."
+          curl -LO https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradlew
+          curl -LO https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradle/wrapper/gradle-wrapper.jar
+          curl -LO https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradle/wrapper/gradle-wrapper.properties
+          
+          mv gradle-wrapper.jar gradle/wrapper/
+          mv gradle-wrapper.properties gradle/wrapper/
+          chmod +x gradlew
+      - name: Build Android APK
+        script: |
+          ./gradlew assembleDebug
+    artifacts:
+      - app/build/outputs/apk/**/*.apk
+      
