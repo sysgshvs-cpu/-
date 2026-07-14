@@ -71,9 +71,11 @@ workflows:
           find_library(log-lib log)
           target_link_libraries(injector \${log-lib})
           EOF
-      - name: Build Android APK
+      - name: Build Android APK using Gradle Wrapper
         script: |
-          chmod +x gradlew || true
+          # Generate wrapper automatically to avoid missing gradlew error
+          gradle wrapper --gradle-version 8.5
+          chmod +x gradlew
           ./gradlew assembleDebug
     artifacts:
       - app/build/outputs/apk/**/*.apk
