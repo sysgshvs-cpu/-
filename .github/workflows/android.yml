@@ -14,11 +14,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           
-      # حذفنا خطوة gradle wrapper واستبدلناها بأمر مباشر للتحميل
       - name: Build with Gradle
         run: |
-          chmod +x gradlew || true
-          ./gradlew assembleDebug || gradle assembleDebug
+          ./gradlew wrapper --gradle-version 8.0
+          ./gradlew assembleDebug --no-build-cache --configure-on-demand
         
       - name: Upload APK
         uses: actions/upload-artifact@v4
