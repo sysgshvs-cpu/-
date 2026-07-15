@@ -14,14 +14,12 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           
-      - name: Initialize and Build
+      - name: Build with Gradle
         run: |
-          # 1. إنشاء ملف gradlew إذا كان مفقوداً
-          gradle wrapper
-          # 2. إعطاء صلاحية التشغيل
+          # إجبار النظام على استخدام نسخة Gradle 7.5 (أكثر استقراراً)
+          gradle wrapper --gradle-version 7.5
           chmod +x gradlew
-          # 3. البناء مع تخطي كل إعدادات الإحصائيات المسببة للمشاكل
-          ./gradlew assembleDebug --no-daemon -Dorg.gradle.parallel=false -Dorg.gradle.configureondemand=false
+          ./gradlew assembleDebug --no-daemon
         
       - name: Upload APK
         uses: actions/upload-artifact@v4
