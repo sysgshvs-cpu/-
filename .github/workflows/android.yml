@@ -1,25 +1,27 @@
 name: Build APK
+
 on: [push]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'temurin'
+          
       - name: Build with Gradle
         run: |
-          # التأكد من صلاحيات التنفيذ
-          chmod +x gradlew || true
-          # البناء المباشر
-          ./gradlew :app:assembleDebug
+          # استخدام gradle المثبت مسبقاً في النظام مباشرة
+          gradle :app:assembleDebug
+        
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
-
           
