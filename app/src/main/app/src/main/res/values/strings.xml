@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PUBG Unlocker</string>
+    <string name="title_main">PUBG Unlocker</string>
+    <string name="status_pending">بانتظار منح الصلاحيات...</string>
+    <string name="status_granted">تم منح الصلاحيات بنجاح!</string>
+    <string name="btn_permission">منح صلاحية الوصول للملفات</string>
+    <string name="btn_unlock">فتح جميع السكنات والسيارات</string>
+    <string name="btn_reset">استعادة الأصلي (إزالة التعديل)</string>
+    <string name="warning_text">⚠️ تحذير: يرجى التعديل على مسؤوليتك الخاصة. تأكد من إغلاق اللعبة تماماً قبل الضغط على زر التفعيل لتجنب أي مشاكل.</string>
+</resources>
