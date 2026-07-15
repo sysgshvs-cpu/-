@@ -16,8 +16,7 @@ jobs:
           
       - name: Build with Gradle
         run: |
-          gradle wrapper
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon --stacktrace -Dorg.gradle.parallel=false -Dorg.gradle.configureondemand=false
         
       - name: Upload APK
         uses: actions/upload-artifact@v4
