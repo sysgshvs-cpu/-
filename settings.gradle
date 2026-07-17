@@ -5,5 +5,11 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-rootProject.name = "MyApplication"
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "PUBG Unlocker"
 include ':app'
